@@ -1,0 +1,46 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="pcoded-main-container">
+	<div class="pcoded-content">
+		<div class="page-header">
+			<div class="page-block">
+				<div class="row align-items-center">
+                    <div class="col-md-12 col-sm-12">
+                        <div class="page-header-title d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center ">
+                            <h4 >Normalisasi Bahasa Makassar</h4>
+                            <div class="btn-toolbar mb-2 mb-md-0">
+
+                            </div>
+                        </div>
+
+                    </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="row">
+       <div class="col-sm-12">
+        <div class="card">
+
+
+         <div class="card-body">
+          <form method="post" action="{% url 'normalisasi/normalize' %}" accept-charset="utf-8">
+            {% csrf_token %}
+
+            <div class="input-group">
+                <input required type="text" name="inputan" id="inputan" value="" placeholder="Input minimal 1 kata" class="form-control">
+                <span class="input-group-btn">
+                    <button type="submit" class="btn btn-primary">submit</button>
+
+                </span>
+            </div>
+        </form>
+    </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+{% endblock content %}
+

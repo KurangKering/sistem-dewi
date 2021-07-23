@@ -1,0 +1,76 @@
+{% extends 'layout.html' %}
+{% load static %}
+{% block import-css %}
+<style>
+
+#data_uji_table tr th:last-child, #data_uji_table tr td:last-child{
+	white-space: nowrap;
+	width: 1%;
+}
+
+</style>
+{% endblock import-css %}
+{% block content %}
+<div class="pcoded-main-container">
+	<div class="pcoded-content">
+		<div class="page-header">
+			<div class="page-block">
+				<div class="row align-items-center">
+					<div class="col-md-12 col-sm-12">
+						<div class="page-header-title d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center ">
+							<h4 >Data Cleaning</h4>
+							<div class="btn-toolbar mb-2 mb-md-0">
+
+							</div>
+						</div>
+
+					</div>
+
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="card">
+
+					<div class="card-body">
+						<table id="data_uji_table" class="table table-bordered table-hover">
+							<thead>
+								<tr>
+									<th>Id</th>
+									<th>Raw data</th>
+									<th>Cleaned Data</th>
+								</tr>
+							</thead>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+{% endblock content %}
+{% block import-js %}
+<script>
+
+$(document).ready(function() {
+
+	data_uji_datatable = $("#data_uji_table").DataTable({
+		"ajax": {
+			"url": "{% url 'cleaning/cleaning' %}",
+			"dataSrc": "cleaned_data_uji"
+		},
+		"columns": [
+		{ "data": "id" },
+		{ "data": "raw_data" },
+		{ "data": "cleaned_data" },
+		],
+
+
+	});
+});
+
+</script>
+{% endblock import-js %}

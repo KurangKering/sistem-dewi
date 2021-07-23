@@ -1,0 +1,229 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>levenstein dewi</title>
+    <!--[if lt IE 11]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="">
+    <meta name="author" content="Phoenixcoded" />
+    <link rel="icon" href="{% static 'dist/assets/images/favicon.ico' %}" type="image/x-icon">
+
+    <!-- data tables css -->
+    <link rel="stylesheet" href="{% static 'dist/assets/css/plugins/dataTables.bootstrap4.min.css' %}">
+
+    <link rel="stylesheet" href="{% static 'dist/assets/css/style.css' %}">
+    <style>
+        .page-header h4 {
+            font-weight: 400;
+            color: #fff;
+        }
+    </style>
+    {% block import-css %}
+
+    {% endblock import-css %}
+
+</head>
+<body class="">
+    <div class="loader-bg">
+        <div class="loader-track">
+            <div class="loader-fill"></div>
+        </div>
+    </div>
+    <nav class="pcoded-navbar menu-light ">
+        <div class="navbar-wrapper  ">
+            <div class="navbar-content scroll-div " >
+
+                <div class="">
+                    <div class="main-menu-header">
+                        <img class="img-radius" src="{% static 'dist/assets/images/user/avatar-2.jpg' %}" alt="User-Profile-Image">
+                        <div class="user-details">
+                            <div id="more-details">UX Designer <i class="fa fa-caret-down"></i></div>
+                        </div>
+                    </div>
+                    <div class="collapse" id="nav-user-link">
+                        <ul class="list-inline">
+                            <li class="list-inline-item"><a href="{% static 'dist/user-profile.html' %}" data-toggle="tooltip" title="View Profile"><i class="feather icon-user"></i></a></li>
+                            <li class="list-inline-item"><a href="{% static 'dist/email_inbox.html' %}"><i class="feather icon-mail" data-toggle="tooltip" title="Messages"></i><small class="badge badge-pill badge-primary">5</small></a></li>
+                            <li class="list-inline-item"><a href="{% static 'dist/auth-signin.html' %}" data-toggle="tooltip" title="Logout" class="text-danger"><i class="feather icon-power"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <ul class="nav pcoded-inner-navbar ">
+                   <li class="nav-item pcoded-menu-caption">
+                    <label>Navigation</label>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{% url 'index' %}" class="nav-link ">
+                        <span class="pcoded-micon">
+                            <i class="feather icon-aperture"></i>
+                        </span>
+                        <span class="pcoded-mtext">Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'kosakata/index' %}" class="nav-link ">
+                        <span class="pcoded-micon">
+                            <i class="feather icon-aperture"></i>
+                        </span>
+                        <span class="pcoded-mtext">Kamus</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'data_uji/index' %}" class="nav-link ">
+                        <span class="pcoded-micon">
+                            <i class="feather icon-aperture"></i>
+                        </span>
+                        <span class="pcoded-mtext">Data Uji</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'cleaning/index' %}" class="nav-link ">
+                        <span class="pcoded-micon">
+                            <i class="feather icon-aperture"></i>
+                        </span>
+                        <span class="pcoded-mtext">Cleaning</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'normalisasi/perhitungan' %}" class="nav-link ">
+                        <span class="pcoded-micon">
+                            <i class="feather icon-aperture"></i>
+                        </span>
+                        <span class="pcoded-mtext">Perhitungan</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'normalisasi/index' %}" class="nav-link ">
+                        <span class="pcoded-micon">
+                            <i class="feather icon-aperture"></i>
+                        </span>
+                        <span class="pcoded-mtext">Pengujian</span>
+                    </a>
+                </li>
+            </ul>
+
+
+
+        </div>
+    </div>
+</nav>
+<header class="navbar pcoded-header navbar-expand-lg navbar-light header-blue">
+
+
+    <div class="m-header">
+        <a class="mobile-menu" id="mobile-collapse" href="#"><span></span></a>
+        <a href="#" class="b-brand">
+            <img src="{% static 'dist/assets/images/logo.png' %}" alt="" class="logo">
+
+        </a>
+        <a href="#" class="mob-toggler">
+            <i class="feather icon-more-vertical"></i>
+        </a>
+    </div>
+    <div class="collapse navbar-collapse">
+
+        <ul class="navbar-nav ml-auto">
+
+            <li>
+                <div class="dropdown drp-user">
+                    <a href="{% static 'dist/#' %}" class="dropdown-toggle" data-toggle="dropdown">
+                        <i class="feather icon-user"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right profile-notification">
+                        <div class="pro-head">
+                            <img src="{% static 'dist/assets/images/user/avatar-1.jpg' %}" class="img-radius" alt="User-Profile-Image">
+                            <span>John Doe</span>
+                            <a href="{% static 'dist/auth-signin.html' %}" class="dud-logout" title="Logout">
+                                <i class="feather icon-log-out"></i>
+                            </a>
+                        </div>
+                        <ul class="pro-body">
+                            <li><a href="{% static 'dist/user-profile.html' %}" class="dropdown-item"><i class="feather icon-user"></i> Profile</a></li>
+                            <li><a href="{% static 'dist/email_inbox.html' %}" class="dropdown-item"><i class="feather icon-mail"></i> My Messages</a></li>
+                            <li><a href="{% static 'dist/auth-signin.html' %}" class="dropdown-item"><i class="feather icon-lock"></i> Lock Screen</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+
+</header>
+
+
+
+{% block content %}
+
+{% endblock content %}
+
+    <!--[if lt IE 11]>
+        <div class="ie-warning">
+            <h1>Warning!!</h1>
+            <p>You are using an outdated version of Internet Explorer, please upgrade
+               <br/>to any of the following web browsers to access this website.
+            </p>
+            <div class="iew-container">
+                <ul class="iew-download">
+                    <li>
+                        <a href="http://www.google.com/chrome/">
+                            <img src="{% static 'dist/assets/images/browser/chrome.png' %}" alt="Chrome">
+                            <div>Chrome</div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.mozilla.org/en-US/firefox/new/">
+                            <img src="{% static 'dist/assets/images/browser/firefox.png' %}" alt="Firefox">
+                            <div>Firefox</div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="http://www.opera.com">
+                            <img src="{% static 'dist/assets/images/browser/opera.png' %}" alt="Opera">
+                            <div>Opera</div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.apple.com/safari/">
+                            <img src="{% static 'dist/assets/images/browser/safari.png' %}" alt="Safari">
+                            <div>Safari</div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="http://windows.microsoft.com/en-us/internet-explorer/download-ie">
+                            <img src="{% static 'dist/assets/images/browser/ie.png' %}" alt="">
+                            <div>IE (11 & above)</div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <p>Sorry for the inconvenience!</p>
+        </div>
+    <![endif]-->
+
+    <script src="{% static 'dist/assets/js/vendor-all.min.js' %}"></script>
+    <script src="{% static 'dist/assets/js/plugins/bootstrap.min.js' %}"></script>
+    <script src="{% static 'dist/assets/js/ripple.js' %}"></script>
+    <script src="{% static 'dist/assets/js/pcoded.min.js' %}"></script>
+
+    <!-- datatable Js -->
+    <script src="{% static 'dist/assets/js/plugins/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'dist/assets/js/plugins/dataTables.bootstrap4.min.js' %}"></script>
+
+    {% block import-js %}
+
+    {% endblock import-js %}
+
+</body>
+
+</html>
