@@ -54,7 +54,7 @@
 </div>
 
 <div class="modal fade" id="kosakata_modal">
-	<div class="modal-dialog modal-lg">
+	<div class="modal-dialog modal-md">
 		<div class="modal-content">
 			<div class="modal-header">
 				<h4 class="modal-title">Tambah Data Kamus</h4>
@@ -62,11 +62,10 @@
 					<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
-			<form id="kosakata_form" method="POST">
-				{% csrf_token %}
-				<input type="hidden" name="id" id="id" value="">
-				<div class="modal-body">
-
+			<div class="modal-body">
+				<form id="kosakata_form" method="POST">
+					{% csrf_token %}
+					<input type="hidden" name="id" id="id" value="">
 					<div class="form-group">
 						<label for="kata">Kata</label>
 						<input type="text" required class="form-control" id="kata" name="kata" >
@@ -76,24 +75,22 @@
 						<input type="text" required class="form-control" id="arti_kata" name="arti_kata">
 					</div>
 
-					<div class="form-group">
-						<button class="btn btn-info" id="show_import_modal">Import From File</button>
+					<div class="text-center">
+						<button type="submit" class="btn btn-block btn-primary mb-3">Simpan Data</button>
+						<p>ATAU</p>
 					</div>
-
-				</div>
-				<div class="modal-footer justify-content-between">
-					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-					<button type="submit" class="btn btn-primary">Simpan Data</button>
-				</div>
-			</form>
+				</form>
+				<button class="btn btn-info btn-block" id="show_import_modal">Import File Excel</button>
+			</div>
 		</div>
 		<!-- /.modal-content -->
 	</div>
 	<!-- /.modal-dialog -->
 </div>
 
+
 <div class="modal fade" id="import_modal">
-	<div class="modal-dialog modal-lg">
+	<div class="modal-dialog modal-md">
 		<div class="modal-content">
 			<div class="modal-header">
 				<h4 class="modal-title">Import Data Kosakata</h4>
@@ -104,8 +101,8 @@
 			<form id="import_form" method="POST" enctype="multipart/form-data">
 				{% csrf_token %}
 				<div class="modal-body">
-
-
+					
+					
 					<div class="form-group">
 						<label for="file">File</label>
 						<input type="file" required class="form-control" id="file" name="file" >
@@ -115,7 +112,7 @@
 						<input type="checkbox" class="form-check-input" name="delete_all_data" id="delete_all_data">
 						<label class="form-check-label" for="delete_all_data">Hapus seluruh data?</label>
 					</div>
-
+					
 				</div>
 				<div class="modal-footer justify-content-between">
 					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -127,6 +124,12 @@
 	</div>
 	<!-- /.modal-dialog -->
 </div>
+<template  id="render-action-button-template">
+	<div class="btn-group">
+		<button type="button" class="btn btn-outline-secondary show_modal_edit" data-id="place_here"><i class="fas fa-edit"></i></button>
+		<button type="button" class="btn btn-outline-danger show_modal_delete" data-id="place_here" ><i class="fas fa-trash"></i></button>
+	</div>
+</template>
 {% endblock content %}
 {% block import-js %}
 <script>
@@ -135,11 +138,13 @@ $(document).ready(function() {
 
 
 	$(document).on('click', 'button#show_modal_insert', function() {
+		clean_kosakata_form();
 		$("#kosakata_modal").modal('show');
 	});
 
 
 	$(document).on('click', 'button.show_modal_edit', function(e) {
+		showSpinner();
 		var id_kosakata = $(this).data('id');
 		$.ajax({
 			url: "{% url 'kosakata/json_single_kosakata' %}",
@@ -154,33 +159,63 @@ $(document).ready(function() {
 			$("input#arti_kata").val(response.arti_kata);
 
 			$("#kosakata_modal").modal('show');
+			hideSpinner();
 		});
 
 	});
 
 
 	$(document).on('click', 'button.show_modal_delete', function(e) {
+
 		var id_kosakata = $(this).data('id');
-		$.ajax({
-			type: "POST",
-			url: "{% url 'kosakata/delete_kosakata' %}",
-			dataType: 'json',
-			data: {id : id_kosakata},
+		Swal.fire({
+			icon : 'warning',
+			title : 'Hapus data',
+			text : 'Yakin ingin menghapus data?',
+			allowOutsideClick: false,
+			showCancelButton: true,
+			confirmButtonText: 'Hapus',
+			cancelButtonText: 'Jangan',
+
 		})
-		.done(function(response) {
-			kamus_datatable.ajax.reload();
-		})
+		.then((res) => {
+			if (res.value) {
+				showSpinner();
+				$.ajax({
+					type: "POST",
+					url: "{% url 'kosakata/delete_kosakata' %}",
+					dataType: 'json',
+					data: {id : id_kosakata},
+				})
+				.done(function(response) {
+					if (!response.success) {
+
+					} else {
+						kamus_datatable.ajax.reload(null, false);
+						Swal.fire({icon: 'success', showConfirmButton: false, timer: 1000})
+					}
+				})
+				.always(function() {
+					hideSpinner();
+				});
+
+				
+			}
+		} );
+
+
+		
 	});
 
 
 	$(document).on('click', 'button#show_import_modal', function(e) {
 		$("#kosakata_modal").modal('hide');
 		$("#import_modal").modal('show');
-	})
+	});
 
 	$(document).on('submit', 'form#kosakata_form', function(e) {
+		showSpinner();
 		e.preventDefault();
-
 		var data = $(this).serialize();
 		var id_kosakata = $("input#id").val();
 		var url = generate_url(id_kosakata)
@@ -195,14 +230,15 @@ $(document).ready(function() {
 
 				clean_kosakata_form();
 				$("#kosakata_modal").modal('hide');
-				kamus_datatable.ajax.reload();
+				kamus_datatable.ajax.reload(null, false);
+				hideSpinner();
 			}
 		});
-	})
+	});
 
 	$(document).on('submit', 'form#import_form', function(e) {
+		showSpinner();
 		e.preventDefault();
-		alert('importing');
 		var data = new FormData(this);
 
 		var url = "{% url 'kosakata/import_kosakata' %}"
@@ -219,19 +255,21 @@ $(document).ready(function() {
 			if (response.success == true) {
 				$("#import_modal").modal('hide');
 				$("input#file").val('');
-				kamus_datatable.ajax.reload();
+				kamus_datatable.ajax.reload(null, false);
 			}
-			alert('done');
+		})
+		.always(function() {
+			hideSpinner();
 		});
-	})
+	});
 
 
 	kamus_datatable = $("#kosakata_table").DataTable({
-		"ajax": {
-			"url": "{% url 'kosakata/json_kosakata' %}",
-			"dataSrc": ""
-		},
+		"processing": true,
+		"serverSide": true,
+		"ajax": "{% url 'kosakata/json_kosakata' %}",
 		"columns": [
+
 		{ "data": "id" },
 		{ "data": "kata" },
 		{ "data": "arti_kata" },
@@ -240,10 +278,12 @@ $(document).ready(function() {
 		"columnDefs": [ {
 			"targets": -1,
 			"data": null,
+			"sortable": false,
 			"render" : function(data, type, row) {
-				return render_edit_delete_button(row['id'])
+				return render_edit_delete_button2(row['id']);
 			}
 		} ]
+		
 
 	});
 });
@@ -267,5 +307,15 @@ function render_edit_delete_button(id) {
 	html = button_edit + " "+ button_delete;
 	return html
 }
+
+function render_edit_delete_button2(id) {
+	let tmpl = $("#render-action-button-template").html();
+	tmpl = tmpl.replace('place_here', id);
+	tmpl = tmpl.replace('place_here', id);
+
+	return tmpl;
+
+}
 </script>
+
 {% endblock import-js %}

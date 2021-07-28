@@ -1,11 +1,11 @@
 from django.urls import path
 
 from . import views
-
+from .datatables import KosakataDataTables
 urlpatterns = [
     path('', views.index, name="kosakata/index"),
     path('menu_import', views.menu_import, name="kosakata/menu_import"),
-    path('json_kosakata', views.json_kosakata, name="kosakata/json_kosakata"),
+    path('json_kosakata', KosakataDataTables.as_view(), name="kosakata/json_kosakata"),
     path('insert_kosakata', views.insert_kosakata, name="kosakata/insert_kosakata"),
     path('update_kosakata', views.update_kosakata, name="kosakata/update_kosakata"),
     path('delete_kosakata', views.delete_kosakata, name="kosakata/delete_kosakata"),

@@ -40,6 +40,7 @@
 									<th>Id</th>
 									<th>Raw data</th>
 									<th>Cleaned Data</th>
+									<th>Stemmed Data</th>
 								</tr>
 							</thead>
 						</table>
@@ -55,21 +56,39 @@
 {% block import-js %}
 <script>
 
+
 $(document).ready(function() {
 
-	data_uji_datatable = $("#data_uji_table").DataTable({
-		"ajax": {
-			"url": "{% url 'cleaning/cleaning' %}",
-			"dataSrc": "cleaned_data_uji"
-		},
-		"columns": [
-		{ "data": "id" },
-		{ "data": "raw_data" },
-		{ "data": "cleaned_data" },
-		],
+var data_uji_datatable = null;
+	showSpinner();
+	$.ajax({
+		url: "{% url 'cleaning/cleaning' %}",
+		type: 'GET',
+		dataType: 'json',
+	})
+	.done(function(response) {
+		if (response.success) {
 
+			data_uji_datatable = $("#data_uji_table").DataTable({
+				"processing": true,
+				"serverSide": true,
+				"ajax": "{% url 'data_uji/json_data_uji' %}",
+				"columns": [
 
+				{ "data": "id" },
+				{ "data": "raw_data" },
+				{ "data": "cleaned_data" },
+				{ "data": "stemmed_data" },
+				],
+
+			});
+		}
+
+	})
+	.always(function() {
+		hideSpinner();
 	});
+	
 });
 
 </script>

@@ -41,7 +41,7 @@
 							<thead>
 								<tr>
 									<th>Id</th>
-									<th>Raw data</th>
+									<th>Data</th>
 									<th>Action</th>
 								</tr>
 							</thead>
@@ -54,7 +54,7 @@
 	</div>
 </div>
 <div class="modal fade" id="data_uji_modal">
-	<div class="modal-dialog modal-lg">
+	<div class="modal-dialog modal-md">
 		<div class="modal-content">
 			<div class="modal-header">
 				<h4 class="modal-title">Tambah Data Uji</h4>
@@ -62,31 +62,32 @@
 					<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
-			<form id="data_uji_form" method="POST">
-				{% csrf_token %}
-				<input type="hidden" name="id" id="id" value="">
-				<div class="modal-body">
-
+			
+			<div class="modal-body">
+				<form id="data_uji_form" method="POST">
+					{% csrf_token %}
+					<input type="hidden" name="id" id="id" value="">
 					<div class="form-group">
 						<label for="raw_data">Kalimat</label>
 						<textarea required name="raw_data" id="raw_data"  class="form-control"></textarea>
 					</div>
-					<div class="form-group" id="wrapper_show_button">
-						<button class="btn btn-info" id="show_import_modal">Import From File</button>
+					<div class="text-center">
+						<button type="submit" class="btn btn-block btn-primary mb-3">Simpan Data</button>
 					</div>
+				</form>
+				<div class="import-content">
+					<p class="text-center">ATAU</p>
+					<button class="btn btn-info btn-block" id="show_import_modal">Import File Excel</button>
 				</div>
-				<div class="modal-footer justify-content-between">
-					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-					<button type="submit" class="btn btn-primary">Simpan Data</button>
-				</div>
-			</form>
+			</div>
+			
 		</div>
 		<!-- /.modal-content -->
 	</div>
 	<!-- /.modal-dialog -->
 </div>
 <div class="modal fade" id="import_modal">
-	<div class="modal-dialog modal-lg">
+	<div class="modal-dialog modal-md">
 		<div class="modal-content">
 			<div class="modal-header">
 				<h4 class="modal-title">Import Data Uji</h4>
@@ -97,8 +98,8 @@
 			<form id="import_form" method="POST" enctype="multipart/form-data">
 				{% csrf_token %}
 				<div class="modal-body">
-
-
+					
+					
 					<div class="form-group">
 						<label for="file">File</label>
 						<input type="file" required class="form-control" id="file" name="file" >
@@ -108,7 +109,7 @@
 						<input type="checkbox" class="form-check-input" name="delete_all_data" id="delete_all_data">
 						<label class="form-check-label" for="delete_all_data">Hapus seluruh data?</label>
 					</div>
-
+					
 				</div>
 				<div class="modal-footer justify-content-between">
 					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -120,6 +121,12 @@
 	</div>
 	<!-- /.modal-dialog -->
 </div>
+<template  id="render-action-button-template">
+	<div class="btn-group">
+		<button type="button" class="btn btn-outline-secondary show_modal_edit" data-id="place_here"><i class="fas fa-edit"></i></button>
+		<button type="button" class="btn btn-outline-danger show_modal_delete" data-id="place_here" ><i class="fas fa-trash"></i></button>
+	</div>
+</template>
 {% endblock content %}
 {% block import-js %}
 <script>
@@ -128,6 +135,7 @@ $(document).ready(function() {
 
 	$(document).on('click', 'button#show_modal_insert', function() {
 		$("#data_uji_modal .modal-title").text('Tambah Data Uji');
+		$(".import-content").show();
 		clean_data_uji_form();
 		$("#wrapper_show_button").show();
 		$("#data_uji_modal").modal('show');
@@ -136,6 +144,7 @@ $(document).ready(function() {
 
 	$(document).on('click', 'button.show_modal_edit', function(e) {
 		var id_data_uji = $(this).data('id');
+		$(".import-content").hide();
 		$.ajax({
 			url: "{% url 'data_uji/json_single_data_uji' %}",
 			type: 'POST',
@@ -156,15 +165,39 @@ $(document).ready(function() {
 
 	$(document).on('click', 'button.show_modal_delete', function(e) {
 		var id_data_uji = $(this).data('id');
-		$.ajax({
-			type: "POST",
-			url: "{% url 'data_uji/delete_data_uji' %}",
-			dataType: 'json',
-			data: {id : id_data_uji},
+
+		Swal.fire({
+			icon : 'warning',
+			title : 'Hapus data',
+			text : 'Yakin ingin menghapus data?',
+			allowOutsideClick: false,
+			showCancelButton: true,
+			confirmButtonText: 'Hapus',
+			cancelButtonText: 'Jangan',
+
 		})
-		.done(function(response) {
-			data_uji_datatable.ajax.reload();
-		})
+		.then((res) => {
+			if (res.value) {
+				$.ajax({
+					type: "POST",
+					url: "{% url 'data_uji/delete_data_uji' %}",
+					dataType: 'json',
+					data: {id : id_data_uji},
+				})
+				.done(function(response) {
+					if (!response.success) {
+
+					} else {
+						data_uji_datatable.ajax.reload(null, false);
+						Swal.fire({icon: 'success', showConfirmButton: false, timer: 1000})
+					}
+				})
+
+				
+			}
+		} );
+
+		
 	});
 
 
@@ -176,7 +209,7 @@ $(document).ready(function() {
 
 	$(document).on('submit', 'form#data_uji_form', function(e) {
 		e.preventDefault();
-
+		showSpinner();
 		var data = $(this).serialize();
 		var id_data_uji = $("input#id").val();
 		url = generate_url(id_data_uji)
@@ -191,15 +224,21 @@ $(document).ready(function() {
 
 				clean_data_uji_form();
 				$("#data_uji_modal").modal('hide');
-				data_uji_datatable.ajax.reload();
+				data_uji_datatable.ajax.reload(null, false);
+				Swal.fire({icon: 'success', showConfirmButton: false, timer: 1000})
+
 			}
+		})
+		.always(function(){
+			hideSpinner()
+
 		});
 	})
 
 
 	$(document).on('submit', 'form#import_form', function(e) {
+		showSpinner();
 		e.preventDefault();
-		alert('importing');
 		var data = new FormData(this);
 
 		var url = "{% url 'data_uji/import_data_uji' %}"
@@ -216,19 +255,21 @@ $(document).ready(function() {
 			if (response.success == true) {
 				$("#import_modal").modal('hide');
 				$("input#file").val('');
-				data_uji_datatable.ajax.reload();
+				data_uji_datatable.ajax.reload(null, false);
 			}
-			alert('done');
-		});
+		})
+		.always(function() {
+			hideSpinner();
+		})
 	})
 
 
 	data_uji_datatable = $("#data_uji_table").DataTable({
-		"ajax": {
-			"url": "{% url 'data_uji/json_data_uji' %}",
-			"dataSrc": ""
-		},
+		"processing": true,
+		"serverSide": true,
+		"ajax": "{% url 'data_uji/json_data_uji' %}",
 		"columns": [
+
 		{ "data": "id" },
 		{ "data": "raw_data" },
 		{ "data": null },
@@ -236,8 +277,9 @@ $(document).ready(function() {
 		"columnDefs": [ {
 			"targets": -1,
 			"data": null,
+			"sortable": false,
 			"render" : function(data, type, row) {
-				return render_edit_delete_button(row['id'])
+				return render_edit_delete_button2(row['id']);
 			}
 		} ]
 
@@ -262,5 +304,17 @@ function render_edit_delete_button(id) {
 	html = button_edit + " "+ button_delete;
 	return html
 }
+
+function render_edit_delete_button2(id) {
+	let tmpl = $("#render-action-button-template").html();
+	tmpl = tmpl.replace('place_here', id);
+	tmpl = tmpl.replace('place_here', id);
+
+	return tmpl;
+
+}
 </script>
+
+
+
 {% endblock import-js %}
