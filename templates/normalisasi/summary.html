@@ -81,47 +81,49 @@
 					<div class="card-header">
 						<h3 class="card-title">Hasil Levenshtein</h3>
 					</div>
-					<table class="table">
-						<thead>
-							<tr>
-								<th>Kata</th>
-								<th>C</th>
-								<th>Damerau</th>
-							</tr>
-						</thead>
-						<tbody class="table">
-							{% for input, damerau,jumlah in inputan_damerau %}
-							<tr>
-								<td
-								{% if jumlah != 1 %}
-								rowspan="{{ jumlah }}"
-								{% else %}
-								rowspan="2"
-
-								{% endif %}
-								>{{ input }}</td>
-								{% for dam,val in damerau.items %}
+					<div class="table-responsive">
+						<table class="table">
+							<thead>
 								<tr>
-									<td>{{ dam }}</td>
-									<td>{{ val }}</td>
+									<th>Kata</th>
+									<th>C</th>
+									<th>Damerau</th>
 								</tr>
-								{% empty%}
+							</thead>
+							<tbody class="table">
+								{% for input, damerau,jumlah in inputan_damerau %}
 								<tr>
-									<td>-</td>
-									<td>-</td>
+									<td
+									{% if jumlah != 1 %}
+									rowspan="{{ jumlah }}"
+									{% else %}
+									rowspan="2"
+
+									{% endif %}
+									>{{ input }}</td>
+									{% for dam,val in damerau.items %}
+									<tr>
+										<td>{{ dam }}</td>
+										<td>{{ val }}</td>
+									</tr>
+									{% empty%}
+									<tr>
+										<td>-</td>
+										<td>-</td>
+									</tr>
+									{% endfor %}
+
+
 								</tr>
 								{% endfor %}
 
 
-							</tr>
-							{% endfor %}
 
 
 
-
-
-						</tbody>
-					</table>
+							</tbody>
+						</table>
+					</div>
 				</div>
 
 			</div>
