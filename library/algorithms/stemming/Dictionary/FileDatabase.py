@@ -1,6 +1,5 @@
 import os
 class FileDatabase(object):
-    """description of class"""
 
     def get_kamus(self):
         current_dir = os.path.dirname(os.path.realpath(__file__))

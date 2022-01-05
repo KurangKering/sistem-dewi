@@ -1,7 +1,6 @@
 import re
 
 class AbstractDisambiguatePrefixRule(object):
-    """description of class"""
 
     def __init__(self):
         self.disambiguators = []

@@ -1,5 +1,4 @@
 class CacheInterface(object):
-    """description of class"""
 
     def has(self, key):
         pass

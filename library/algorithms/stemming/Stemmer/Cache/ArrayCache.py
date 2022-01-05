@@ -1,7 +1,6 @@
 from library.algorithms.stemming.Stemmer.Cache.CacheInterface import CacheInterface
 
 class ArrayCache(CacheInterface):
-    """description of class"""
 
     def __init__(self):
         self.data = {}

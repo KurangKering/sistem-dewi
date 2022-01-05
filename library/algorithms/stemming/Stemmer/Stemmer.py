@@ -4,11 +4,6 @@ from library.algorithms.stemming.Stemmer.Filter import TextNormalizer
 from library.algorithms.stemming.Stemmer.Context.Context import Context
 
 class Stemmer(object):
-    """Indonesian Stemmer.
-    Nazief & Adriani, CS Stemmer, ECS Stemmer, Improved ECS.
-
-    @link https://github.com/sastrawi/sastrawi/wiki/Resources
-    """
     def __init__(self, dictionary):
         self.dictionary = dictionary
         self.visitor_provider = VisitorProvider()
@@ -17,7 +12,6 @@ class Stemmer(object):
         return self.dictionary
 
     def stem(self, text):
-        """Stem a text string to its common stem form."""
         normalizedText = TextNormalizer.normalize_text(text)
 
         words = normalizedText.split(' ')
@@ -29,11 +23,9 @@ class Stemmer(object):
         return ' '.join(stems)
 
     def stem_word(self, word):
-        """Stem a word to its common stem form."""
         return self.stem_singular_word(word)
 
     def stem_singular_word(self, word):
-        """Stem a singular word to its common stem form."""
         context = Context(word, self.dictionary, self.visitor_provider)
         context.execute()
 

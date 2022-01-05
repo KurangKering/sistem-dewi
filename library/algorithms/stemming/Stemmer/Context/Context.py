@@ -2,7 +2,6 @@ from library.algorithms.stemming.Stemmer.ConfixStripping.PrecedenceAdjustmentSpe
    import PrecedenceAdjustmentSpecification
 
 class Context(object):
-    """Stemming Context using Nazief and Adriani, CS, ECS, Improved ECS"""
 
     def __init__(self, original_word, dictionary, visitor_provider):
         self.original_word = original_word
@@ -35,7 +34,6 @@ class Context(object):
         self.process_is_stopped = True
 
     def execute(self):
-        """Execute stemming process; the result can be retrieved with result"""
 
         #step 1 - 5
         self.start_stemming_process()

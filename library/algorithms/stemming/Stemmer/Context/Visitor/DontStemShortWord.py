@@ -1,5 +1,4 @@
 class DontStemShortWord(object):
-    """description of class"""
 
     def visit(self, context):
         if self.is_whort_word(context.current_word):

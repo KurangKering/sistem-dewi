@@ -1,5 +1,4 @@
 class ContextInterface(object):
-    """description of class"""
 
     def getOriginalWord(self):
         pass

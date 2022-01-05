@@ -5,8 +5,7 @@ from library.algorithms.stemming.Stemmer.CachedStemmer import CachedStemmer
 from library.algorithms.stemming.Stemmer.Cache.ArrayCache import ArrayCache
 
 class StemmerFactory(object):
-    """ Stemmer factory helps creating pre-configured stemmer """
-    APC_KEY = 'sastrawi_cache_dictionary'
+    APC_KEY = 'cache_dictionary'
 
     def create_stemmer(self, isDev=False, kamusClass=None):
         """ Returns Stemmer instance """

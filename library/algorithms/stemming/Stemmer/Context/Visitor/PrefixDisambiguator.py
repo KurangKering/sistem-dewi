@@ -1,7 +1,6 @@
 from library.algorithms.stemming.Stemmer.Context.Visitor.AbstractDisambiguatePrefixRule import AbstractDisambiguatePrefixRule
 
 class PrefixDisambiguator(AbstractDisambiguatePrefixRule):
-    """description of class"""
 
     def __init__(self, disambiguators):
         super(PrefixDisambiguator, self).__init__()
